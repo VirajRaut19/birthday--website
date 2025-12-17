@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Ayesha 🎮</title>
+
+  <!-- Retro pixel font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --pink:#ff77a8;
+      --purple:#9b7cff;
+      --border:#000;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+
+    body{
+      font-family:'Press Start 2P', monospace;
+      background:url('images/pixel-bg.png') repeat;
+      image-rendering:pixelated;
+      color:#000;
+      padding:32px;
+      display:flex;
+      justify-content:center;
+
+      /* readability fixes */
+      font-size:13px;
+      line-height:1.9;
+      letter-spacing:0.4px;
+    }
+
+    .stage{max-width:960px;width:100%}
+
+    .page{
+      background:#fff1f7;
+      border:4px solid var(--border);
+      box-shadow:8px 8px 0 #000;
+      padding:32px;
+      margin-bottom:40px;
+      position:relative;
+    }
+
+    .hidden{display:none}
+
+    h1,h2{text-align:center;margin:0 0 16px 0}
+    h1{
+      font-size:26px;
+      color:var(--pink);
+      text-shadow:2px 2px 0 #000;
+      line-height:1.4;
+    }
+
+    h2{
+      font-size:17px;
+      color:var(--purple);
+      line-height:1.5;
+    }
+
+    .subtitle{text-align:center;font-size:14px;margin-bottom:24px}
+
+    .btn{
+      font-family:'Press Start 2P', monospace;
+      background:#fff;
+      border:3px solid #000;
+      padding:12px 16px;
+      cursor:pointer;
+      box-shadow:4px 4px 0 #000;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .btn::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle,#fff 10%,transparent 11%),
+        radial-gradient(circle,#fff 10%,transparent 11%);
+      background-size:8px 8px;
+      background-position:0 0,4px 4px;
+      opacity:0;
+      animation:sparkle 1.2s infinite;
+    }
+    .btn:hover::after{opacity:.6}
+
+    @keyframes sparkle{
+      0%{background-position:0 0,4px 4px}
+      100%{background-position:8px 8px,12px 12px}
+    }
+
+    .center{text-align:center}
+
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin-top:24px;
+    }
+
+    .gallery.landscape{grid-template-columns:repeat(2,1fr)}
+    .gallery.landscape img{height:220px}
+
+    .gallery img,.placeholder{
+      width:100%;
+      height:180px;
+      border:3px solid #000;
+      image-rendering:pixelated;
+      object-fit:cover;
+      box-shadow:4px 4px 0 #000;
+      cursor:pointer;
+    }
+
+    .placeholder{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:10px;
+      background:#fff;
+    }
+
+    ul.memories{
+      margin-top:24px;
+      font-size:12px;
+      line-height:2.1;
+      letter-spacing:0.3px;
+    }
+
+    footer{text-align:center;font-size:10px;margin-top:24px}
+
+    .lightbox{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.9);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+    }
+    .lightbox.hidden{display:none}
+    .lightbox img{
+      max-width:90vw;
+      max-height:90vh;
+      border:6px solid #fff;
+      image-rendering:pixelated;
+      box-shadow:0 0 0 6px #000,12px 12px 0 #000;
+      background:#000;
+    }
+
+    canvas.confetti{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+    .content{position:relative;z-index:1}
+
+    @media(max-width:700px){
+      .gallery{grid-template-columns:repeat(2,1fr)}
+      .gallery.landscape{grid-template-columns:1fr}
+      h1{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+
+<canvas class="confetti" id="confetti"></canvas>
+
+<div class="stage content">
+
+<section id="page1" class="page">
+  <h1>★ HAPPY BIRTHDAY AYESHA ★</h1>
+  <p class="subtitle">I LOVE YOU ♥</p>
+  <div class="center">
+    <button class="btn" onclick="goTo('page2')">PRESS START</button>
+  </div>
+</section>
+
+<section id="page2" class="page hidden">
+  <h2>small note for u</h2>
+  <p id="message"></p>
+  <div class="center">
+    <button class="btn" onclick="goTo('page1')">← BACK</button>
+    <button class="btn" onclick="goTo('page3')">FUNNY PICS →</button>
+  </div>
+</section>
+
+<section id="page3" class="page hidden">
+  <h2>FUNNY PICS I LOVE THE MOST ,1ST IS MY PERSONAL FAV , CLICK ON THEM TO SEE THE WHOLE PIC</h2>
+  <div class="gallery" id="galleryFunny"></div>
+  <div class="center">
+    <button class="btn" onclick="goTo('page2')">← BACK</button>
+    <button class="btn" onclick="goTo('page4')">OUR PICS →</button>
+  </div>
+</section>
+
+<section id="page4" class="page hidden">
+  <h2>OUR PICS</h2>
+  <div class="gallery landscape" id="galleryUs"></div>
+  <div class="center">
+    <button class="btn" onclick="goTo('page3')">← BACK</button>
+    <button class="btn" onclick="goTo('page5')">OUR MEMORIES →</button>
+  </div>
+</section>
+
+<section id="page5" class="page hidden">
+  <h2>OUR MEMORIES</h2>
+  <ul class="memories" id="memories"></ul>
+  <div class="center">
+    <button class="btn" onclick="goTo('page4')">← BACK</button>
+  </div>	
+  <footer>MADE WITH ♥ LOVE ♥ BY VIRAJ</footer>
+</section>
+
+</div>
+
+<div id="lightbox" class="lightbox hidden" onclick="closeLightbox()">
+  <img id="lightboxImg">
+</div>
+
+<script>
+const messageText=`Hey Ayesha,\n\nHappy Birthday to the most special person in my life. i love u so much and i cant tell you how grateful i am to have u in my life, thank you for existing u are the most cutest, prettiest, funniest, beautiful, gorgus, adorable, stunning abhi ke liye itne he words baki ka text pe aa batata hu, i really hope u achieve each and everything u want in ur life thank you for putting up with me, i am and i will even if one day when we are not together just know i will alwaysss be proud of you and u are myyy cutest sweetest baby ,i am sorry for this gpt ass low effort website thoda sa dhyan dedeta toh abhi kuch mast sa bana pata aiml ke naam pe kalank hu yeh prompt dalke banane me bhi bhot time lagaya mujhe toh i am sorry but i am not the smart ass 12th wala viraj anymore but yeah i still love you the mosttt. (pls be with me for atleast 500 years).\n\n ---♥ Viraj`;
+document.getElementById('message').innerText = messageText;
+
+const funnyPics = [
+  'images/funny1.jpg',
+  'images/funny2.jpg',
+  'images/funny3.jpg',
+  'images/funny4.jpg',
+  'images/funny5.jpg',
+  'images/funny6.jpg'
+];
+
+const ourPics = [
+  'images/us1.jpg',
+  'images/us2.jpg',
+  'images/us3.jpg',
+  'images/us4.jpg'
+];
+
+const memoriesList = [
+  'our 2 dates in kandivali yeah ik u were not feeling so good on the first date but u huuging me from ghatkopar to thane ahhhh i am so sorry ik u were sick but i can never forget that moment u looked so delicate and cute i just wanted to keep u in my hoodie and take u home i just started loving u even more from that day and then on the second date the photobooth thank you humblewalking apke wajah se hume 2 mast se hangouts mile',
+
+  'each and every cream chills date (first of all abse tu kabhi dusre ladke ke saath cream chills nhi jayegi that is our spot i am sorry but i am insecure like that)',
+
+  'lets go back to 12th std and talk about our walks broo howw am i ever supposed to forget that u literally made my jr. clg life so much more memorable those walks used to be so fun literally nth to eat or wtv just walking and talking most of the time ahhh woh clg me firse same class me baithna h mujhe tere se saath plss take me back to 12th',
+
+  'i think bhot bada ho rha h baki ke tujhe milke batata hu i am sorry and not sorry for making u read all this and being this clingy but i love u so muchhh muahhhhhhhhhhhhhhhhhhhhhhhhh. once again happy birthdayy ayesha.❤️❤️'
+];
+
+
+
+function goTo(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+function loadGallery(arr,el,limit){
+  if(arr.length===0){
+    for(let i=0;i<limit;i++){
+      const d=document.createElement('div');
+      d.className='placeholder';
+      d.textContent='ADD IMAGE';
+      el.appendChild(d);
+    }
+  } else {
+    arr.slice(0,limit).forEach(src=>{
+      const img=document.createElement('img');
+      img.src=src;
+      img.onclick=()=>openLightbox(src);
+      el.appendChild(img);
+    });
+  }
+}
+
+loadGallery(funnyPics,document.getElementById('galleryFunny'),6);
+loadGallery(ourPics,document.getElementById('galleryUs'),4);
+
+const memUl=document.getElementById('memories');
+memoriesList.forEach(m=>{
+  const li=document.createElement('li');
+  li.textContent=m;
+  memUl.appendChild(li);
+});
+
+function openLightbox(src){
+  document.getElementById('lightboxImg').src=src;
+  document.getElementById('lightbox').classList.remove('hidden');
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.add('hidden');
+}
+
+/* CONFETTI */
+const canvas=document.getElementById('confetti');
+const ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+function rand(a,b){return Math.random()*(b-a)+a}
+function makeParticle(){return{x:rand(0,W),y:-10,w:rand(6,12),h:rand(6,12),vx:rand(-2,2),vy:rand(2,5),r:rand(0,360),vr:rand(-6,6)}}
+function burst(n=30){for(let i=0;i<n;i++)particles.push(makeParticle())}
+function loop(){
+  ctx.clearRect(0,0,W,H);
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.x+=p.vx;p.y+=p.vy;p.vy+=0.05;p.r+=p.vr;
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.r*Math.PI/180);
+    ctx.fillStyle=['#ff77a8','#9b7cff','#ffd86b','#6ee7b7'][i%4];
+    ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    ctx.restore();
+    if(p.y>H+20)particles.splice(i,1);
+  }
+  requestAnimationFrame(loop);
+}
+loop();burst(25);
+</script>
+
+</body>
+</html>
